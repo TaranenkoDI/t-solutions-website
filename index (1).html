@@ -1,0 +1,180 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T Solutions - Повышение прибыли в стиле Apple</title>
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .hero-bg {
+            background: linear-gradient(to bottom, #f5f5f7, #ffffff);
+        }
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 smooth-scroll">
+    <!-- Header -->
+    <header class="fixed top-0 w-full bg-white/80 backdrop-blur-md shadow-sm z-10">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-semibold">T Solutions</h1>
+            <nav>
+                <a href="#services" class="text-gray-600 hover:text-gray-900 mx-4">Услуги</a>
+                <a href="#cases" class="text-gray-600 hover:text-gray-900 mx-4">Кейсы</a>
+                <a href="#contact" class="text-gray-600 hover:text-gray-900 mx-4">Контакты</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg pt-24 pb-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="section-title text-gray-900 mb-6 fade-in">Создаем отделы продаж, которые меняют игру</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-8 fade-in">Мы превращаем ваши бизнес-процессы в мощный инструмент для роста прибыли с помощью анализа, оптимизации и обучения.</p>
+            <a href="#contact" class="inline-block bg-black text-white py-3 px-8 rounded-full hover:bg-gray-800 transition text-lg font-medium fade-in">Начать сейчас</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title text-center mb-12 fade-in">Наши решения</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="text-center fade-in hover-scale">
+                    <img src="https://images.unsplash.com/photo-1551288049-b1bd52206d29?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Анализ процессов" class="h-48 w-full object-cover rounded-xl mb-4">
+                    <h3 class="text-2xl font-semibold mb-2">Аудит продаж</h3>
+                    <p class="text-gray-600">Глубокий анализ текущих процессов для выявления возможностей роста.</p>
+                </div>
+                <div class="text-center fade-in hover-scale">
+                    <img src="https://images.unsplash.com/photo-1516321310765-79e2e7b79a6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Обучение команды" class="h-48 w-full object-cover rounded-xl mb-4">
+                    <h3 class="text-2xl font-semibold mb-2">Подбор и обучение</h3>
+                    <p class="text-gray-600">Формируем команду, которая закрывает сделки с высокой конверсией.</p>
+                </div>
+                <div class="text-center fade-in hover-scale">
+                    <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Оптимизация" class="h-48 w-full object-cover rounded-xl mb-4">
+                    <h3 class="text-2xl font-semibold mb-2">Эффективные процессы</h3>
+                    <p class="text-gray-600">Создаем системы, которые повышают средний чек и прибыль.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Studies Section -->
+    <section id="cases" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title text-center mb-12 fade-in">Результаты, которые говорят сами за себя</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="bg-white rounded-xl shadow-lg p-8 fade-in hover-scale">
+                    <h3 class="text-2xl font-semibold mb-4">Интернет-магазин электроники</h3>
+                    <p class="text-gray-600">Рост выручки на 30% и конверсии на 40% за 6 месяцев благодаря оптимизации процессов.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-8 fade-in hover-scale">
+                    <h3 class="text-2xl font-semibold mb-4">Образовательная платформа</h3>
+                    <p class="text-gray-600">Увеличение команды продаж и рост конверсии на 35% за 3 месяца.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="section-title mb-8 fade-in">Готовы к росту?</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-8 fade-in">Оставьте заявку, и мы поможем вашему бизнесу выйти на новый уровень.</p>
+            <div class="max-w-md mx-auto">
+                <input type="text" placeholder="Ваше имя" class="w-full p-4 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black fade-in">
+                <input type="email" placeholder="Ваш email" class="w-full p-4 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black fade-in">
+                <textarea placeholder="Ваше сообщение" class="w-full p-4 mb-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black resize-none h-32 fade-in"></textarea>
+                <button class="bg-black text-white py-3 px-8 rounded-full hover:bg-gray-800 transition text-lg font-medium fade-in">Отправить</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-400">© 2025 T Solutions. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Animations -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>
